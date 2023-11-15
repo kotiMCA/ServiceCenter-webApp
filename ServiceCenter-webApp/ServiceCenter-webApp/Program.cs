@@ -8,18 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAuthentication()
-         .AddCookie(options =>
-         {
-             options.LoginPath = "/Account/Unauthorized/";
-             options.AccessDeniedPath = "/Account/Forbidden/";
-         })
-        .AddJwtBearer(options =>
-        {
-            options.Audience = "http://localhost:5001/";
-            options.Authority = "http://localhost:5000/";
-        }).
-        AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd")); ;//Configuration, "AzureAd");
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+         .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
+         ;//Configuration, "AzureAd");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
