@@ -3,13 +3,30 @@ using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using System.Configuration;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-         .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+   // .AddCookie()
+     //.Addcookie(options =>
+     //{
+     //    options.loginpath = "/account/unauthorized/";
+     //    options.accessdeniedpath = "/account/forbidden/";
+     .AddAzureAD(options=>
+     { 
+     }
+     )    
+     //})
+        .AddJwtBearer(options =>
+        {
+            options.Audience = "http://localhost:5001/";
+            options.Authority = "http://localhost:5000/";
+        })
+    //    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
          ;//Configuration, "AzureAd");
 var app = builder.Build();
 
@@ -27,7 +44,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
