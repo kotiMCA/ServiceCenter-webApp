@@ -1,4 +1,4 @@
 # ignore all bin file
-bin/**
-obj/*
-.vs/*
+*/bin/**
+*/obj/*
+*/.vs/*
